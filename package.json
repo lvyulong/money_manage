@@ -1,0 +1,35 @@
+{
+  "name": "money_manage",
+  "version": "1.0.0",
+  "description": "用于资金的管理与统计",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "set NODE_ENV=dev&&nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lvyulong/money_manage.git"
+  },
+  "keywords": [
+    "express",
+    "vue"
+  ],
+  "author": "吕玉龙",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lvyulong/money_manage/issues"
+  },
+  "homepage": "https://github.com/lvyulong/money_manage#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "errorhandler": "^1.5.0",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "mysql": "^2.16.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  }
+}
