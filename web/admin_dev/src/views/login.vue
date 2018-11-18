@@ -12,7 +12,7 @@
                                  status-icon
                                  :rules="rules"
                                  ref="form">
-                            <el-form-item prop="name">
+                            <el-form-item prop="mobile">
                                 <el-input placeholder="手机号" v-model="model.mobile" autocomplete="off"></el-input>
                             </el-form-item>
 

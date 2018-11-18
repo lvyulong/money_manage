@@ -21,15 +21,14 @@ export default {
 
         // 应用主体
         {state: 'app', defaultLink: 'app.user.index'},
-        // demo测试页面
-        {state: 'app.demo', type: 'blank', defaultLink: 'app.demo.index'},
-        {state: 'app.demo.index'},
 
         // 我的账户
         {state: 'app.user', type: 'blank', defaultLink: 'app.user.index'},
         {state: 'app.user.index'},
         {state: 'app.user.new'},
         {state: 'app.user.edit', params: '/:id'},
+
+
         // 我的计划
         {state: 'app.plan', type: 'blank'},
         // 前端

@@ -72,7 +72,6 @@ router.post('/login',function (req,res,next) {
         }else{
             connection.query('SELECT * from t_user WHERE ??=? AND ??=?',['mobile',req.body.mobile,'password',req.body.password],function (err,row) {
                 if(err){
-                    console.log(err);
                     next({
                         status:500,
                         message:'数据库查询失败'
@@ -94,5 +93,16 @@ router.post('/login',function (req,res,next) {
         }
     })
 });
+
+// 退出
+router.post('/logout',function (req,res,next) {
+    if(req.session.user){
+        req.session.user = null;
+    }
+    res.send({
+        message:'退出成功'
+    });
+});
+
 
 module.exports = router;

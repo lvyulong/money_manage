@@ -1,21 +1,30 @@
 var router = require('express').Router();
+var initRoute = require('../initRoute');
+
 
 router.use(function (req,res,next) {
-    console.log("进入user");
-    next();
-    // res.send({
-    //     user:{
-    //         name:"Eallon"
-    //     }
-    // })
+    if(req.session.user){
+        if(req.session.user.type==0){
+            next();
+        }else{
+            next({
+                status: 403,
+                error: {
+                    message: '对不起，您的访问权限不够！'
+                }
+            })
+        }
+    }else{
+        next({
+            status:401,
+            error:{
+                message:'没有权限访问'
+            }
+        })
+    }
 
 });
 
-router.get('/test',function (req,res,next) {
-    res.send({
-        name:'test'
-    })
-});
-
+initRoute(router,{notCheckLogin:true});
 
 module.exports = router;
