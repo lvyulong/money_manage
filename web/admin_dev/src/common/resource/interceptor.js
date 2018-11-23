@@ -5,7 +5,9 @@ export default {
             // post提交显示loading
             if(config.method != 'get'){
                 if(!loading){
-                    loading =  vm.$loading();
+                    loading =  vm.$loading({
+                        text:'正在加载...'
+                    });
                 }
             }
             // console.log(config)

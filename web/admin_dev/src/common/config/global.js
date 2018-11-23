@@ -8,12 +8,14 @@ import fileUpload from 'component/fileUpload.vue';
 import tags from 'component/tags.vue';
 import pageHeader from 'component/pageHeader.vue';
 import selectLink from 'component/selectLink.vue';
+import myChart from 'component/myChart.vue';
 import vueQr from 'vue-qr';
 import gender from 'filter/gender';
 import isEnable from 'filter/isEnable';
 import propMap from 'filter/propMap';
 import keyToVal from 'filter/keyToVal';
 import timestampTotime from 'filter/timestampTotime';
+import dateFormat from 'filter/dateFormat';
 // -----------------------------------------------------
 
 // 组件
@@ -26,6 +28,7 @@ const config = {
         {name: 'tags', component: tags},
         {name: 'pageHeader', component: pageHeader},
         {name: 'selectLink', component: selectLink},
+        {name: 'myChart', component: myChart},
         {name: 'vueQr', component: vueQr},
     ],
 
@@ -37,6 +40,7 @@ const config = {
         {name: 'propMap', filter: propMap},
         {name: 'timestampTotime', filter: timestampTotime},
         {name: 'keyToVal', filter: keyToVal},
+        {name: 'dateFormat', filter: dateFormat},
     ]
 };
 

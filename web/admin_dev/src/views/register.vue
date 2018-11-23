@@ -100,7 +100,7 @@
         position: relative;
         width: 100%;
         min-height: 100vh;
-        background-image: url(~image/login/bg.png);
+        background-image: url(~image/login/bg3.jpg);
         background-repeat: no-repeat;
         background-position: top left;
         background-size: cover;
@@ -113,7 +113,7 @@
             margin-top: -360px;
         }
         .user-panel {
-            background: rgba(255, 255, 255, .8);
+            background: rgba(240, 255, 255, .8);
             width: 500px;
             border: none;
             border-radius: 7px;

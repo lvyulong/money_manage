@@ -1,10 +1,10 @@
 import Resource from 'app/common/resource/base';
 
-const demoApi = new Resource({
-    url: 'demo',
+const propsApi = new Resource({
+    url: 'props',
     actions: [
 
     ]
 });
 
-export default demoApi;
+export default propsApi;

@@ -13,7 +13,9 @@
             <!-- 主菜单 -->
             <template v-for="(config,confIndex) in data">
                 <!-- 有子菜单 -->
-                <el-submenu :index="config.path" v-if="config.children">
+                <el-submenu :index="config.path"
+                            v-if="config.children"
+                            v-show="!config.needSuperUser||(config.needSuperUser&&local.user&&local.user.type==0)">
                     <template slot="title">
                         <i :class="config.icon" v-if="config.icon"></i>
                         &nbsp;
@@ -46,6 +48,7 @@
                 <!-- 无二级菜单 -->
                 <el-menu-item :index="config.path"
                               v-if="!config.children"
+                              v-show="!config.needSuperUser||(config.needSuperUser&&local.user&&local.user.type==0)"
                               :class="{'router-active':isActiveState(config.active)}">
                     <i :class="config.icon" v-if="config.icon"></i>
                     &nbsp;
@@ -56,6 +59,8 @@
     </div>
 </template>
 <script>
+    import {mapState} from 'vuex';
+
     export default {
         name: "SlideNav",
         data() {
@@ -72,6 +77,11 @@
             "textColor",
             "activeTextColor"
         ],
+        computed: {
+            ...mapState([
+                'local'
+            ])
+        },
         methods: {
             handleOpen() {
 

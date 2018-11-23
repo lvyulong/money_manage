@@ -5,6 +5,8 @@ var pool = mysql.createPool({
     port:3306,
     user:'root',
     password:'199011',
-    database:'money_manage'
+    database:'money_manage',
+    multipleStatements:true,   //多语句查询
+
 });
 module.exports = pool;

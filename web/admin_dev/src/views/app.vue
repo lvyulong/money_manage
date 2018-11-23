@@ -3,13 +3,13 @@
         <el-container>
             <!-- 侧边导航栏 -->
             <el-aside>
-                <div style="padding-top: 3rem">
-                    <div>
-                        <img :src="sys.sysLogo2" class="logo2">
-                    </div>
+                <div style="padding-top: 1rem">
                     <div>
                         <transition name="fade">
-                            <img :src="sys.sysLogo1" class="logo1" v-show="!collapse">
+                            <img :src="sys.sysLogo" class="logo1" v-show="!collapse">
+                        </transition>
+                        <transition name="fade">
+                            <img :src="sys.sysLogo" class="logo2" v-show="collapse">
                         </transition>
                     </div>
                     <!--<div class="mt10 white font18 title">-->
@@ -19,7 +19,7 @@
                     <!--</div>-->
                 </div>
                 <slide-nav
-                        class="mt3rem"
+                        class="mt2rem"
                         :data="navConfigs"
                         :collapse="collapse"
                         :unique-opened="true"
@@ -94,7 +94,6 @@
         beforeRouteEnter: (to, from, next) => {
             authApi.current().then(function (res) {
                 next((vm) => {
-                    console.log(res.data);
                     vm.$store.commit('setProp', {
                         key: 'local',
                         val: res.data
@@ -116,15 +115,15 @@
     }
 
     .logo1 {
-        width: 130px;
+        width: 80px;
         margin-top: 5px;
-
+        border-radius: 50%;
     }
 
     .logo2 {
         width: 40px;
         margin-top: 5px;
-        margin-right: 5px;
+        border-radius: 50%;
     }
 
     .el-header {

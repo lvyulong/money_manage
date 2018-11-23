@@ -1,4 +1,6 @@
 var pool = require('../database');
+var actions = require('./actions');
+
 /*
 options:
     notCheckLogin: boolean;    是否不检查是否登录
@@ -9,7 +11,7 @@ options:
     notDelete: boolean 是否不初始化delete action
 */
 function initRoute(router, options) {
-    var options = options?options:{};
+    var options = options ? options : {};
     // 验证session，是否登陆
     if (!options.notCheckLogin) {
         router.use(function (req, res, next) {
@@ -25,103 +27,147 @@ function initRoute(router, options) {
             }
         })
     }
+
+
     // actionIndex:查询、翻页
-    if (!options.index) {
+    if (!options.notIndex) {
         router.get('/', function (req, res, next) {
-            pool.getConnection(function (err, connection) {
-                if (err) {
-                    next({
-                        status: 500,
-                        error: {
-                            message: '连接数据库失败'
-                        }
-                    })
-                } else {
-                    var _page_size = 20;
-                    var _page = 1;
-                    var queryObj = Object.assign(req.query);
-                    // 每页显示多少个
-                    if (queryObj._page_size) {
-                        _page_size = queryObj._page_size;
-                        delete queryObj._page_size;
+            // 默认只查询当前用户的数据
+            var query = Object.assign({created_by:req.session.user.id},req.query);
+            actions.find({
+                table:options.table,
+                query:query,
+                callback:function (err,result) {
+                    if(err){
+                        next({
+                            status: 500,
+                            error: {
+                                message: '查询数据失败',
+                                cause: err
+                            }
+                        })
+                    }else{
+                        res.send(result)
                     }
-
-                    // 当前页数
-                    if (queryObj._page) {
-                        _page = queryObj._page;
-                        delete queryObj._page;
-                    }
-
-                    // 查询条件构造,去除掉_page、_page_size，如果还有其他的查询参数，则构造查询字符串
-                    if (JSON.stringify(queryObj) != '{}') {
-                        var query = 'WHERE ';
-                        for (var key in queryObj) {
-                            var val = queryObj[key];
-                            query = query + key + '=' + val + ' and '
-                        }
-                        query = query.substring(0, query.length - 5);
-                    }
-
-                    // 构造sql查询语句
-                    if (query) {
-                        var sqlItems = `SELECT * FROM ${options.table} ` + query;
-                        var sqlCount = `SELECT COUNT(id) AS count FROM ${options.table} ` + query;
-
-                    } else {
-                        var sqlItems = `SELECT * FROM ${options.table}`;
-                        var sqlCount = `SELECT COUNT(id) AS count FROM ${options.table}`;
-                    }
-                    // 查询sql加上翻页功能
-                    sqlItems = sqlItems + ` ORDER BY id desc LIMIT ${_page_size} OFFSET ${_page_size * (_page - 1)}`;
-                    connection.query(sqlCount, function (err, rows, fileds) {
-                        if (err) {
-                            next({
-                                status: 500,
-                                error: {
-                                    message: '查询数据库失败'
-                                }
-                            });
-                            connection.release();
-                        } else {
-                            var totalCount = rows[0] && rows[0].count;
-                            connection.query(sqlItems, function (err, rows, fileds) {
-                                if (err) {
-                                    next({
-                                        status: 500,
-                                        error: {
-                                            message: '查询数据库失败'
-                                        }
-                                    })
-                                } else {
-                                    res.send({
-                                        items: rows,
-                                        _meta: {
-                                            currentPage: _page*1,
-                                            pageCount: Math.ceil(totalCount / _page_size),
-                                            perPage: _page_size*1,
-                                            totalCount: totalCount*1,
-                                        }
-                                    })
-                                }
-                                connection.release();
-                            });
-                        }
-                    });
                 }
             })
         })
     }
 
     // actionCreate
-    if(!options.create){
+    if (!options.notCreate) {
+        router.post('/', function (req, res, next) {
+            var model = Object.assign({}, req.body);
+            model.created_by = req.session.user.id;
+            actions.create({
+                table: options.table,
+                model: model,
+                callback: function (err, result) {
+                    if (err) {
+                        next({
+                            status: 500,
+                            error: {
+                                message: '插入数据失败',
+                                cause: err
+                            }
+                        })
+                    } else {
+                        res.send(result);
+                    }
+                }
+            })
+        })
+    }
 
+    // actionUpdate
+    if (!options.notUpdate) {
+        router.put('/:id(\\d+)', function (req, res, next) {
+            var model = Object.assign({}, req.body);
+            if (model.created_at) {
+                delete model.created_at;
+            }
+            if (model.updated_at) {
+                delete model.updated_at;
+            }
+            actions.update({
+                table:options.table,
+                model: model,
+                callback:function (err,result) {
+                    if (err) {
+                        next({
+                            status: 500,
+                            error: {
+                                message: "更新记录失败",
+                                cause: err
+                            }
+                        })
+                    } else {
+                        res.send(result);
+                    }
+                }
+            })
+        })
     }
 
 
+    // actionView
+    if (!options.notView) {
+        router.get('/:id(\\d+)', function (req, res, next) {
+            var id = req.params.id;
+            actions.findOne({
+                table: options.table,
+                id: id,
+                callback: function (err, result) {
+                    if (err) {
+                        next({
+                            status: 500,
+                            error: {
+                                message: "查询记录失败",
+                                cause: err
+                            }
+                        })
+                    } else {
+                        res.send(result);
+                    }
+                }
+            });
+        })
+    }
 
-
-
-
+    // actionDelete
+    if (!options.notDelete) {
+        router.delete('/:id', function (req, res, next) {
+            var id = req.params.id;
+            pool.getConnection(function (err, connection) {
+                if (err) {
+                    next({
+                        status: 500,
+                        error: {
+                            message: '数据库连接失败'
+                        }
+                    })
+                } else {
+                    var sqlDelete = `DELETE FROM ${options.table} WHERE id = ${id}`;
+                    connection.query(sqlDelete, function (err, rows) {
+                        if (err) {
+                            next({
+                                status: 500,
+                                error: {
+                                    message: "删除记录失败",
+                                    cause: err
+                                }
+                            });
+                        } else {
+                            res.send({
+                                message: '删除成功'
+                            })
+                        }
+                    });
+                    connection.release();
+                }
+            });
+        })
+    }
 }
 
 module.exports = initRoute;

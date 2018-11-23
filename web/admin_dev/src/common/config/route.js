@@ -13,7 +13,7 @@
 import handle from 'app/common/config/handle';
 
 export default {
-    default: 'app.user.index',
+    default: 'app.cashTotal.index',
     routes: [
         // 登陆
         {state: 'login'},
@@ -29,19 +29,29 @@ export default {
         {state: 'app.user.edit', params: '/:id'},
 
 
-        // 我的计划
-        {state: 'app.plan', type: 'blank'},
-        // 前端
-        {state: 'app.plan.forward', type: 'blank'},
-        {state: 'app.plan.forward.index'},
-        // 后端
-        {state: 'app.plan.backward', type: 'blank'},
-        {state: 'app.plan.backward.index'},
-        // 运动
-        {state: 'app.plan.sport', type: 'blank'},
-        {state: 'app.plan.sport.index'},
-        // 休息
-        {state: 'app.plan.rest', type: 'blank'},
-        {state: 'app.plan.rest.index'}
+        // 基本面板
+        {state: 'app.cashTotal', type: 'blank',defaultLink: 'app.cashTotal.index'},
+        {state: 'app.cashTotal.index'},
+
+
+
+        // 现金流动
+        {state: 'app.cashFlow', type: 'blank',defaultLink: 'app.cashFlow.index'},
+        {state: 'app.cashFlow.index'},
+        {state: 'app.cashFlow.chart'},
+        {state: 'app.cashFlow.new'},
+        {state: 'app.cashFlow.edit',params:'/:id'},
+
+        // 消费计划
+        {state: 'app.shopPlan', type: 'blank',defaultLink: 'app.shopPlan.index'},
+        {state: 'app.shopPlan.index'},
+        {state: 'app.shopPlan.new'},
+        {state: 'app.shopPlan.edit',params:'/:id'},
+
+        // 系统数据
+        {state: 'app.sys', type: 'blank',defaultLink: 'app.sys.index'},
+        {state: 'app.sys.index'},
+
+
     ]
 };

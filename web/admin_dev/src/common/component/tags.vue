@@ -66,7 +66,7 @@
 <script>
     export default {
         name: 'tags',
-        props: ['tags','active','onlyShow'],
+        props: ['tags','active','onlyShow','keyName'],
         data() {
             return {
                 tagInputShow: '',
@@ -95,7 +95,7 @@
                     this.$message.error("输入信息不能为空");
                     return;
                 }
-                this.$emit(this.tagInputShow, this.model);
+                this.$emit(this.tagInputShow, this.model,this.keyName);
                 this.cancel();
             },
             cancel() {
@@ -103,12 +103,12 @@
                 this.model = {};
             },
             deleteItem(tag) {
-                this.$emit('delete', tag);
+                this.$emit('delete', tag,this.keyName);
             },
             // 选中
             select(tag) {
                 // active属性与父组件实现双向绑定
-                this.$emit('update:active', tag.id)
+                this.$emit('update:active', tag.id,this.keyName)
             },
         }
     }

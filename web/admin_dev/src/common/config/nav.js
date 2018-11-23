@@ -2,38 +2,34 @@
 // active：url中只要有该值出现，则为激活状态
 export default [
     {
-        label: '我的账号',
+        label: '账户管理',
         icon: 'fa fa-users font20',
         path: '/app/user/index',
-        active: '/app/user'
+        active: '/app/user',
+        needSuperUser:1
     },
     {
-        label: '我的计划',
-        icon: 'fa fa-file-text font20',
-        // 有子菜单的话，此处设置的path似乎点击没有路由的跳转，只是一个容器；
-        path: '/app/plan/forward/index',
-        active: '/app/plan',
-        children: [
-            {
-                name: '技术',
-                items: [
-                    {path: '/app/plan/forward/index', label: '前端', active: '/app/plan/forward/index'},
-                    {path: '/app/plan/backward/index', label: '后端', active: '/app/plan/backward/index'},
-                ]
-            },
-            {
-                name: '健康',
-                items: [
-                    {path: '/app/plan/sport/index', label: '运动', active: '/app/plan/sport/index'},
-                    {path: '/app/plan/rest/index', label: '休息', active: '/app/plan/rest/index'},
-                ]
-            },
-        ]
+        label: '基本面板',
+        icon: 'fa fa-line-chart font20',
+        path: '/app/cashTotal/index',
+        active: '/app/cashTotal'
     },
     {
-        label: '列表Demo',
-        icon: 'fa fa-users font20',
-        path: '/app/demo/index',
-        active: '/app/demo'
+        label: '现金流动',
+        icon: 'fa fa-money font20',
+        path: '/app/cashFlow/index',
+        active: '/app/cashFlow'
+    },
+    {
+        label: '消费计划',
+        icon: 'fa fa-shopping-cart font20',
+        path: '/app/shopPlan/index',
+        active: '/app/shopPlan'
+    },
+    {
+        label: '系统数据',
+        icon: 'fa fa-cogs font20',
+        path: '/app/sys/index',
+        active: '/app/sys'
     },
 ]

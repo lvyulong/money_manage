@@ -10,24 +10,21 @@
                      :rules="rules"
                      class="mt2rem"
                      ref="form">
-                <el-form-item label="用户名" prop="name">
+                <el-form-item label="名称" prop="name">
                     <el-input v-model="model.name"></el-input>
                 </el-form-item>
-                <el-form-item label="手机号" prop="mobile">
-                    <el-input type="number" v-model="model.mobile"></el-input>
+
+                <el-form-item label="金额" prop="money">
+                    <el-input type="number" v-model="model.money"></el-input>
                 </el-form-item>
 
-                <el-form-item label="邮箱" prop="mail">
-                    <el-input v-model="model.mail"></el-input>
-                </el-form-item>
-                <!--账户类型-->
-                <el-form-item label="账户类型" prop="type">
+                <el-form-item label="类型" prop="type">
                     <el-select
                             style="width: 100%"
                             v-model="model.type"
-                            placeholder="账户类型">
+                            placeholder="类型">
                         <el-option
-                                v-for="item in views.userTypes"
+                                v-for="item in views.type"
                                 :key="item.id"
                                 :label="item.name"
                                 :value="item.id">
@@ -35,11 +32,23 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="是否启用" prop="is_enable">
-                    <el-switch v-model="model.is_enable"
-                               :active-value=1
-                               :inactive-value=0
-                               style="margin-top: 10px"></el-switch>
+                <el-form-item label="事件类型" prop="event_type">
+                    <el-select
+                            style="width: 100%"
+                            v-model="model.event_type"
+                            placeholder="事件类型">
+                        <el-option
+                                v-for="item in views.eventType"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+
+                <el-form-item label="描述" prop="desc">
+                    <el-input type="textarea" rows="5" v-model="model.desc"></el-input>
                 </el-form-item>
 
                 <el-form-item>
@@ -54,33 +63,37 @@
     </div>
 </template>
 <script>
-    import userApi from 'api/userApi';
+    import cashFlowApi from 'api/cashFlowApi';
+    import propsApi from 'api/propsApi';
+    import enumConfig from 'config/enum';
     import axios from 'axios';
     export default {
-        name: "appUserEdit",
+        name: "appCashFlowNew",
         data() {
             return {
-                pageApi: userApi,
+                pageApi: cashFlowApi,
                 nav:[
-                    {label:'用户管理',to:{name:'appUserIndex'}},
-                    {label:'编辑用户'}
+                    {label:'现金流动',to:{name:'appCashFlowIndex'}},
+                    {label:'新增流水'}
                 ],
                 model:{
                     name:'',
-                    mobile:'',
-                    mail:'',
-                    is_enable:1,
-                    type:1
+                    money:'',
+                    type:'',
+                    event_type:'',
+                    desc:''
                 },
                 formRules:[
-                    {key:'name',label:'账号'},
-                    {key:'mobile',label:'手机号',length:11},
-                    {key:'mail',label:'邮箱',reg:/\S+@\S+\.\S+/},
+                    {key:'name',label:'名称'},
+                    {key:'money',label:'金额'},
+                    {key:'type',label:'类型'},
+                    {key:'event_type',label:'事件类型'},
                 ],
                 views:{
-                    userTypes:[
-                        {name:'管理员',id:0},
-                        {name:'用户',id:1},
+                    eventType:[],
+                    type:[
+                        {id:1,name:'收入'},
+                        {id:2,name:'支出'},
                     ]
                 },
             }
@@ -97,12 +110,11 @@
                 this.$refs.form.validate((valid)=>{
                     if(valid){
                         var data = Object.assign({},that.model);
-                        delete data.password2;
-                        userApi.update({
+                        that.pageApi.save({
                             data:data
                         }).then(function (res) {
-                            that.$message.success("创建成功");
-                            that.$router.push({name:'appUserIndex'});
+                            that.$message.success("新增成功");
+                            that.$router.push({name:'appCashFlowIndex'});
                         })
                     }
                 })
@@ -110,14 +122,12 @@
         },
         created:function(){
             var that = this;
-            userApi.get({
-                params:{
-                    id:that.$route.params.id
-                }
-            }).then(function (res) {
-                that.model = res.data;
-            })
+            axios.all([
+                propsApi.query({params:{type:enumConfig['EVENT_TYPE']}})
+            ]).then(function (res) {
+                that.views.eventType = res[0].data.items;
 
+            })
         }
     };
 </script>

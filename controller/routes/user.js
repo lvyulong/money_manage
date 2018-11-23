@@ -25,6 +25,9 @@ router.use(function (req,res,next) {
 
 });
 
-initRoute(router,{notCheckLogin:true});
+initRoute(router,{
+    table:'t_user',
+    notCheckLogin:true
+});
 
 module.exports = router;
